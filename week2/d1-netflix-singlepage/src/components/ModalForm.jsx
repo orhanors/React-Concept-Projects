@@ -56,7 +56,7 @@ class ModalForm extends React.Component {
 					addComment: {
 						comment: "",
 						rate: 1,
-						elementId: this.props.movieId,
+						elementId: this.props.movie.imdbID,
 					},
 					errMessage: "",
 					submittedSize: this.state.submittedSize + 1,
@@ -100,7 +100,7 @@ class ModalForm extends React.Component {
 							addComment={this.state.addComment}
 							onChangeElement={this.updateCommentField}
 							onSubmitComment={this.submitComment}
-							movieId={this.props.movie.imdbID}
+							movieId={this.state.elementId}
 						/>
 					</Modal.Body>
 				</Modal>

@@ -52,7 +52,7 @@ class CommentList extends React.Component {
 				alert("deleted");
 
 				let filteredComments = this.state.comments.filter(
-					(comment) => comment._id != id
+					(comment) => comment._id !== id
 				);
 				this.setState({
 					comments: filteredComments,
@@ -81,7 +81,7 @@ class CommentList extends React.Component {
 		console.log("unmounted");
 	}
 	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.submittedSize != this.props.submittedSize) {
+		if (prevProps.submittedSize !== this.props.submittedSize) {
 			console.log("ComponentDidUpdate is working...");
 			this.getComments();
 			// this.setState({ update: !this.state.update });
@@ -136,7 +136,7 @@ class CommentList extends React.Component {
 					})}
 				</div>
 			);
-		} else if (this.state.comments.length == 0 && !this.state.isLoading) {
+		} else if (this.state.comments.length === 0 && !this.state.isLoading) {
 			body = (
 				<Alert variant='danger'>
 					There is no comment for this movie!
