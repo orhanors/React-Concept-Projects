@@ -3,7 +3,8 @@ import { Container, Row, Col, Spinner } from "react-bootstrap";
 import AddComment from "./AddComment";
 import CommentList from "./CommentList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-brands-svg-icons";
+import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
+
 class MovieDetail extends React.Component {
 	state = {
 		movieDetails: null,
@@ -16,8 +17,16 @@ class MovieDetail extends React.Component {
 		submittedSize: 0,
 		showModal: false,
 		isLoading: true,
+		isAddedToMyList: false,
 	};
 
+	handleAddMovieToMyList = () => {
+		const { Poster, Title, imdbID } = this.state.movieDetails;
+
+		this.setState({ isAddedToMyList: !this.state.isAddedToMyList }); //Change behavior of icon
+
+		this.props.handleClick(Poster, Title, imdbID); //Send Poster and Title to prop
+	};
 	componentDidMount = () => {
 		this.getMovieDetail();
 	};
@@ -159,13 +168,46 @@ class MovieDetail extends React.Component {
 											</span>
 										</div>
 									</div>
+
 									<Col className='mb-2' md={12}>
-										<strong>Director </strong>
-										<p>
-											{" "}
-											{this.state.movieDetails.Director}
-										</p>
+										<Row className='d-flex justify-content-between'>
+											<Col md={8}>
+												<strong>Director </strong>
+												<p>
+													{" "}
+													{
+														this.state.movieDetails
+															.Director
+													}
+												</p>
+											</Col>
+											<Col md={4}>
+												{this.state.isAddedToMyList ? (
+													<FontAwesomeIcon
+														onClick={
+															this
+																.handleAddMovieToMyList
+														}
+														style={{
+															color: "green",
+														}}
+														className='fa-3x add-list-icon ml-5'
+														icon={faCheck}
+													/>
+												) : (
+													<FontAwesomeIcon
+														onClick={
+															this
+																.handleAddMovieToMyList
+														}
+														className='fa-3x add-list-icon ml-5'
+														icon={faPlus}
+													/>
+												)}
+											</Col>
+										</Row>
 									</Col>
+
 									<Col className='mb-2' md={12}>
 										<strong>Release Date </strong>
 										<p>

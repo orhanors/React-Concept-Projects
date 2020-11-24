@@ -16,8 +16,7 @@ class SingleMovie extends React.Component {
 						src={this.props.Movie.Poster}
 						className='img-fluid thumbnails'
 					/>
-					<Link
-						to={`/details/${this.props.Movie.imdbID}/${this.props.Movie.Title}`}>
+					<Link to={`/details/${this.props.Movie.imdbID}`}>
 						<Button variant='info' style={{ display: "none" }}>
 							Details
 						</Button>

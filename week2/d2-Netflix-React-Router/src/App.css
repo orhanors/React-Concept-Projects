@@ -23,6 +23,7 @@ body {
 hr {
 	border: 2px solid rgb(112, 112, 112);
 	border-radius: 5px;
+	/* font-size: xx-large; */
 }
 /* Nav Avatars */
 .avatar img {
@@ -143,18 +144,18 @@ hr {
 	font-size: 10px;
 }
 
-.detail-page img {
-	border: 2px solid #fff;
-
+.detail-page img,
+.user-list-page img {
 	-moz-box-shadow: 10px 10px 5px #ccc;
 	-webkit-box-shadow: 10px 10px 5px #ccc;
-	box-shadow: 7px 7px 5px rgb(77, 76, 76);
+	box-shadow: 4px 4px 5px rgb(77, 76, 76);
 	-moz-border-radius: 25px;
 	-webkit-border-radius: 25px;
 	border-radius: 25px;
 }
 
-.detail-page img:hover {
+.detail-page img:hover,
+.user-list-page img:hover {
 	transform: scale(1.1);
 	cursor: pointer;
 }
@@ -193,7 +194,7 @@ hr {
 	color: white;
 }
 .add-comment-form:hover {
-	transform: scale(1.1);
+	transform: scale(1.07);
 }
 .footer__container {
 	color: rgb(153, 152, 152);
@@ -203,5 +204,19 @@ hr {
 .footer__container p:hover {
 	color: white;
 	transform: scale(1.05);
+	cursor: pointer;
+}
+
+.add-list-icon {
+	font-weight: 900;
+	color: black;
+	border: 2px solid rgb(129, 129, 129);
+	padding: 8px;
+	border-radius: 50%;
+	background-color: rgba(77, 76, 76, 0.596);
+}
+
+.add-list-icon:hover {
+	transform: scale(1.2);
 	cursor: pointer;
 }

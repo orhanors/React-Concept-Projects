@@ -3,10 +3,11 @@ import { Dropdown } from "react-bootstrap";
 
 import logo from "../netflix-logo.png";
 import "../App.css";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 class NavBar extends Component {
 	state = {};
 	render() {
+		const { pathname } = this.props.location;
 		return (
 			<nav className='navbar navbar-expand-lg navbar-dark'>
 				<a className='navbar-brand my-1 mx-4' href='index.html'>
@@ -19,10 +20,15 @@ class NavBar extends Component {
 					className='collapse navbar-collapse'
 					id='navbarSupportedContent'>
 					<ul className='navbar-nav mr-auto'>
-						<li className='nav-item mr-3 active'>
-							<a className='nav-link' href='#'>
+						<li
+							className={
+								pathname == "/"
+									? "nav-item mr-3 active"
+									: "nav-item mr-3"
+							}>
+							<Link className='nav-link' to='/'>
 								Home
-							</a>
+							</Link>
 						</li>
 						<li className='nav-item mr-3'>
 							<a className='nav-link' href='#'>
@@ -39,10 +45,15 @@ class NavBar extends Component {
 								New & Popular
 							</a>
 						</li>
-						<li className='nav-item mr-3'>
-							<a className='nav-link' href='#'>
+						<li
+							className={
+								pathname == "/myList"
+									? "nav-item mr-3 active"
+									: "nav-item mr-3"
+							}>
+							<Link className='nav-link' to='/myList'>
 								My List
-							</a>
+							</Link>
 						</li>
 					</ul>
 
@@ -104,4 +115,4 @@ class NavBar extends Component {
 	}
 }
 
-export default NavBar;
+export default withRouter(NavBar);
