@@ -20,7 +20,7 @@ const UserMovieList = (props) => {
 					<Row className='justify-content-center'>
 						{movies.map((userMovie, index) => {
 							return (
-								<Col md={3} className='mx-3 my-3'>
+								<Col key={index} md={3} className='mx-3 my-3'>
 									{/* <h1>{userMovie.title}</h1> */}
 									<Link to={`/details/${userMovie.imdbID}`}>
 										<img

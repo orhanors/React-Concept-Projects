@@ -5,6 +5,12 @@ import CommentList from "./CommentList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCheck } from "@fortawesome/free-solid-svg-icons";
 
+import {
+	saveDataToLocalStorage,
+	removeDataFromLocalStorage,
+} from "../utils/localStorage";
+import { Link } from "react-router-dom";
+
 class MovieDetail extends React.Component {
 	state = {
 		movieDetails: null,
@@ -16,9 +22,9 @@ class MovieDetail extends React.Component {
 		errMessage: "",
 		submittedSize: 0,
 		isLoading: true,
+		showNotificationMessage: false,
 
-		localStorageMovies: [],
-
+		localStorageArrayName: "userMovieList",
 		isAddedToMyList: false,
 	};
 
@@ -26,47 +32,27 @@ class MovieDetail extends React.Component {
 		this.getMovieDetail();
 	};
 
-	saveDataToLocalStorage(data) {
-		let allMovies = [];
-		// Parse the serialized data back into an aray of objects
-		if (localStorage.userMovieList) {
-			allMovies = JSON.parse(
-				window.localStorage.getItem("userMovieList")
-			);
-		}
-
-		// Push the new data (whether it be an object or anything else) onto the array
-		allMovies.push(data);
-		// Alert the array value
-		// Re-serialize the array back into a string and store it in localStorage
-		window.localStorage.setItem("userMovieList", JSON.stringify(allMovies));
-	}
-	removeDataFromLocalStorage(data) {
-		let allMovies = [];
-
-		if (localStorage.userMovieList) {
-			allMovies = JSON.parse(
-				window.localStorage.getItem("userMovieList")
-			);
-			allMovies = allMovies.filter(
-				(movie) => movie.imdbID !== data.imdbID
-			);
-
-			window.localStorage.setItem(
-				"userMovieList",
-				JSON.stringify(allMovies)
-			);
-		}
-	}
-
 	handleAddMovieToMyList = () => {
 		const { Poster, Title, imdbID } = this.state.movieDetails;
 
+		const { localStorageArrayName } = this.state;
+
+		this.toggleNotificationShow();
 		/** If user adds a movie to MYList this movie is stored in local */
 		this.setState({ isAddedToMyList: !this.state.isAddedToMyList }, () => {
+			//If isAddedToMyList is true (which means user adds the movie to My List)
+			// add this movie detail to local storage
+			console.log(
+				"inside of state function: ",
+				this.state.isAddedToMyList
+			);
 			if (this.state.isAddedToMyList) {
-				this.saveDataToLocalStorage({ Poster, Title, imdbID });
+				saveDataToLocalStorage(
+					{ Poster, Title, imdbID },
+					localStorageArrayName
+				);
 
+				//This piece is not necessary since we're using localStorage
 				this.props.handleClick(
 					Poster,
 					Title,
@@ -74,27 +60,33 @@ class MovieDetail extends React.Component {
 					this.state.isAddedToMyList
 				);
 			} else {
-				this.removeDataFromLocalStorage({ Poster, Title, imdbID });
+				removeDataFromLocalStorage(
+					{ Poster, Title, imdbID },
+					localStorageArrayName
+				);
 			}
 		});
-		console.log("outside of ", this.state.isAddedToMyList); // this log works first
-		//Send Poster and Title to prop
+		console.log("outside of state function:  ", this.state.isAddedToMyList); // this log works first
 	};
 
 	getMovieDetail = async () => {
 		let idFromSearchBar = this.props.match.params.id;
-
+		const { localStorageArrayName } = this.state;
 		try {
 			let response = await fetch(
 				"http://www.omdbapi.com/?apikey=827e9820&i=" + idFromSearchBar
 			);
 			let data = await response.json();
 
+			// If the movie is in the localStorage array, this means it added to userMovieList
+			// After fetching, if the relevant movie is in the local storage array, isAddedToMyList
+			// should be true.
 			setTimeout(() => {
 				this.setState({ movieDetails: data, isLoading: false }, () => {
-					if (localStorage.userMovieList) {
+					if (localStorage[localStorageArrayName]) {
+						//Check if the movie is in the local storage array, if it is change state to true
 						let isAddedToMyList = JSON.parse(
-							window.localStorage.getItem("userMovieList")
+							window.localStorage.getItem(localStorageArrayName)
 						).some(
 							(movie) =>
 								movie.imdbID === this.state.movieDetails.imdbID
@@ -158,9 +150,56 @@ class MovieDetail extends React.Component {
 			});
 		}
 	};
+
+	toggleNotificationShow() {
+		this.setState({
+			showNotificationMessage: true,
+		});
+
+		setTimeout(() => {
+			this.setState({
+				showNotificationMessage: false,
+			});
+		}, 5000);
+	}
+
+	notificationMessage = () => {
+		return (
+			<Container
+				className='movieList-notification'
+				style={{
+					display: this.state.showNotificationMessage
+						? "block"
+						: "none",
+				}}>
+				<div className='notificaiton-message w3-animate-zoom'>
+					<span
+						onClick={(e) => {
+							e.currentTarget.closest(
+								".movieList-notification"
+							).style.display = "none";
+							this.setState({ showNotificationMessage: false });
+						}}
+						className='close'>
+						&times;
+					</span>
+					<p>
+						Movie
+						{this.state.isAddedToMyList
+							? " added to "
+							: " removed from "}
+						<Link style={{ textDecoration: "none" }} to='/myList'>
+							<strong style={{ color: "white" }}>My List</strong>
+						</Link>
+					</p>
+				</div>
+			</Container>
+		);
+	};
 	render() {
 		return (
 			<>
+				{this.notificationMessage()}
 				{this.state.isLoading && (
 					<Spinner
 						style={{ marginLeft: "50%" }}

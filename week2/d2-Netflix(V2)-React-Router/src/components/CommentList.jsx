@@ -7,6 +7,7 @@ class CommentList extends React.Component {
 		isLoading: true,
 		update: true,
 		deletedSize: 0,
+		errorMessage: false,
 	};
 
 	getComments = async () => {
@@ -26,9 +27,11 @@ class CommentList extends React.Component {
 				let comments = await response.json();
 
 				this.setState({ comments, isLoading: false });
+			} else {
+				this.setState({ isLoading: false, errorMessage: true });
 			}
 		} catch (e) {
-			this.setState({ isLoading: false });
+			this.setState({ isLoading: false, errorMessage: true });
 		}
 	};
 
@@ -61,6 +64,7 @@ class CommentList extends React.Component {
 			}
 		} catch (err) {
 			console.log(err);
+			this.setState({ isLoading: false, errorMessage: true });
 		}
 	};
 
@@ -110,10 +114,10 @@ class CommentList extends React.Component {
 								key={index}
 								className='comment-item d-flex justify-content-between mt-2'>
 								<ListGroup.Item className='text-dark'>
-									Comment: {comment.comment}
+									<strong>Comment: </strong> {comment.comment}
 								</ListGroup.Item>
 								<ListGroup.Item className='text-dark'>
-									<span>Rate </span>
+									<strong>Rate </strong>
 									<Badge pill variant={variant}>
 										{comment.rate}
 									</Badge>
@@ -131,12 +135,25 @@ class CommentList extends React.Component {
 					})}
 				</div>
 			);
-		} else if (this.state.comments.length === 0 && !this.state.isLoading) {
+		} else if (
+			this.state.comments.length === 0 &&
+			!this.state.isLoading &&
+			!this.state.errorMessage
+		) {
 			body = (
 				<div className='d-flex justify-content-center align-items-center mt-3'>
 					<Alert variant='warning'>
 						&#9780; There is no comment for this movie!{" "}
 						<strong>Leave the first comment</strong>
+					</Alert>
+				</div>
+			);
+		} else if (this.state.errorMessage) {
+			body = (
+				<div className='d-flex justify-content-center align-items-center mt-3'>
+					<Alert variant='danger'>
+						&#9762; Something went wrong!
+						<strong> Refresh the page </strong>
 					</Alert>
 				</div>
 			);
