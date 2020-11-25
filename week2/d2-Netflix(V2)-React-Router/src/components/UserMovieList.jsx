@@ -22,7 +22,7 @@ const UserMovieList = (props) => {
 							return (
 								<Col md={3} className='mx-3 my-3'>
 									{/* <h1>{userMovie.title}</h1> */}
-									<Link to={`/details/${userMovie.id}`}>
+									<Link to={`/details/${userMovie.imdbID}`}>
 										<img
 											key={index}
 											src={userMovie.Poster}
