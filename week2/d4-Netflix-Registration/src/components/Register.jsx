@@ -29,7 +29,7 @@ class Register extends React.Component {
 				cvv: "",
 			},
 		},
-
+		// isFormFilled: "",
 		pageNumber: 1,
 	};
 
@@ -72,7 +72,7 @@ class Register extends React.Component {
 		let isFilled;
 		for (let info in user) {
 			if (info !== "creditCard") {
-				isFilled = user[info].length > 0 === true;
+				isFilled = user[info].length >= 3 === true;
 				console.log(isFilled);
 				console.log(user[info]);
 			}
@@ -102,9 +102,13 @@ class Register extends React.Component {
 					<Row>
 						<Col mb={12} className='text-center'>
 							<h1 className='mt-3'>REGISTER</h1>
+							<hr />
 							{this.state.pageNumber !== 4 && (
 								<h2 style={{ color: "gray" }}>
-									Step {this.state.pageNumber}\3
+									<span style={{ color: "whitesmoke" }}>
+										{this.state.pageNumber}
+									</span>
+									\3
 								</h2>
 							)}
 						</Col>
@@ -290,6 +294,7 @@ class Register extends React.Component {
 							{this.state.pageNumber === 3 && (
 								<div className='col-50 credit-payment'>
 									<h3>Payment</h3>
+
 									<label htmlFor='fname'>
 										Accepted Cards
 									</label>
@@ -307,6 +312,7 @@ class Register extends React.Component {
 											className='fa fa-cc-discover'
 											style={{ color: "orange" }}></i>
 									</div>
+									<h4>(Not Required for Free Trial)</h4>
 									<label htmlFor='cname'>Name on Card</label>
 
 									<input
